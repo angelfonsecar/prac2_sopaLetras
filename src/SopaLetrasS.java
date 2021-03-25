@@ -14,7 +14,7 @@ public class SopaLetrasS {
 
             for (;;){
                 Socket cl = s.accept();
-                System.out.println("Cliente conectado desde "+cl.getInetAddress()+":"+cl.getPort());
+                System.out.println("Cliente conectado desde  "+cl.getInetAddress()+":"+cl.getPort());
 
                 ObjectOutputStream oos = new ObjectOutputStream(cl.getOutputStream());
                 ObjectInputStream ois = new ObjectInputStream(cl.getInputStream());
