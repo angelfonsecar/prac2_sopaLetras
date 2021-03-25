@@ -8,7 +8,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class SopaLetrasC {
-    private JTextField tf;
     private JComboBox<String> combo = new JComboBox<>();;
     private JFrame frame;
 
@@ -28,20 +27,16 @@ public class SopaLetrasC {
            oos.writeObject("a");
            oos.flush();
 
-           // Creacion del JComboBox y añadir los items.
-           for (String category: categ) {
+           // Añadir los items JComboBox.
+           for (String category: categ)
                combo.addItem(category);
-           }
 
-           tf = new JTextField(20);
            // Accion a realizar cuando el JComboBox cambia de item seleccionado.
            combo.addActionListener(new ActionListener() {
                @Override
                public void actionPerformed(ActionEvent e) {
                    String elec = combo.getSelectedItem().toString();
-                   tf.setText(elec);
                    try {
-                       System.out.println("A cont. intentará write: "+elec);
                        oos.writeObject(elec);
                        oos.flush();
                    } catch (IOException ioException) {
@@ -49,22 +44,20 @@ public class SopaLetrasC {
                    }
                }
            });
+           //Creacion de la ventana con los componentes
+           frame = new JFrame();
+           frame.getContentPane().setLayout(new FlowLayout());
+           frame.getContentPane().add(combo);
+           frame.pack();
+           frame.setVisible(true);
+           frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-           oos.close();
-           ois.close();
-           cl.close();
+//           oos.close();
+//           ois.close();
+//           cl.close();
        }catch(Exception e){
            e.printStackTrace();
        }
-
-        // Creacion de la ventana con los componentes
-        frame = new JFrame();
-        frame.getContentPane().setLayout(new FlowLayout());
-        frame.getContentPane().add(combo);
-        frame.getContentPane().add(tf);
-        frame.pack();
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     public static void main(String[] args) {

@@ -4,7 +4,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class SopaLetrasS {
-    private String[] categ = {"Animales","Flores","Colores","Instrumentos musicales","Películas",""};
+    private String[] categ = {"Animales","Flores","Colores","Instrumentos musicales","Películas"};
 
     public SopaLetrasS() {
         try {
@@ -14,7 +14,7 @@ public class SopaLetrasS {
 
             for (;;){
                 Socket cl = s.accept();
-                System.out.println("Cliente conectado desde  "+cl.getInetAddress()+":"+cl.getPort());
+                System.out.println("Cliente conectado desde  "+cl.getInetAddress()+" : "+cl.getPort());
 
                 ObjectOutputStream oos = new ObjectOutputStream(cl.getOutputStream());
                 ObjectInputStream ois = new ObjectInputStream(cl.getInputStream());
@@ -24,7 +24,7 @@ public class SopaLetrasS {
                 while (true){
                     String elec = (String) ois.readObject();
                     System.out.println("elec = " + elec);
-                    if(elec.isEmpty()) break;
+                    if(elec.equals("salir")) break;
                 }
 
                 oos.close();
