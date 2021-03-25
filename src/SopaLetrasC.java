@@ -22,10 +22,11 @@ public class SopaLetrasC {
 
            oos = new ObjectOutputStream(cl.getOutputStream());
            ois = new ObjectInputStream(cl.getInputStream());
-           oos.writeObject("");
-           oos.flush();
+
 
            String []categ = (String[]) ois.readObject();
+           oos.writeObject("a");
+           oos.flush();
 
            // Creacion del JComboBox y añadir los items.
            for (String category: categ) {
