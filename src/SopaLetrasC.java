@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -9,10 +10,12 @@ import java.net.Socket;
 public class SopaLetrasC {
 	private JComboBox<String> combo = new JComboBox<>();;
 	private JFrame frame;
-	private JPanel panel;
+	private JPanel panelSopa, rightPanel;
 	JButton [][] botones;
 	private int rows=16;
     private final int columns=16;
+
+    private JTextField txt = new JTextField();
 
 	private ObjectOutputStream oos;
 	private ObjectInputStream ois;
@@ -44,15 +47,17 @@ public class SopaLetrasC {
             });
 
             //Creacion de la ventana con los componentes
-            panel = new JPanel();
-            panel.setLayout(new GridLayout(rows,columns));
+            panelSopa = new JPanel();
+            panelSopa.setLayout(new GridLayout(rows,columns));
+            rightPanel = new JPanel();
+            rightPanel.add(combo);
 
             frame = new JFrame();
             frame.setLayout(new BorderLayout());
 
             hazBotones();
-            frame.add(panel,BorderLayout.WEST);
-            frame.getContentPane().add(combo);
+            frame.add(panelSopa,BorderLayout.WEST);
+            frame.add(rightPanel,BorderLayout.EAST);
             frame.pack();
             frame.setVisible(true);
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -74,6 +79,17 @@ public class SopaLetrasC {
                 botones[x][y].setMargin(new Insets(0,0,0,0));
                 //botones[x][y].setBackground(Color.WHITE);
                 botones[x][y].setPreferredSize(new Dimension(30, 30));
+                botones[x][y].setName(x+","+y);
+
+                int finalX = x;
+                int finalY = y;
+                botones[x][y].addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        System.out.println("Botón: "+botones[finalX][finalY].getName());
+                    }
+                });
+
 //                botones[x][y].putClientProperty("xpos", y);
 //                botones[x][y].putClientProperty("ypos", x);
 //                botones[x][y].putClientProperty("result", false);
@@ -115,7 +131,7 @@ public class SopaLetrasC {
                         }
                     }
                 });*/
-                panel.add(botones[x][y]);
+                panelSopa.add(botones[x][y]);
             }
         }
     }
