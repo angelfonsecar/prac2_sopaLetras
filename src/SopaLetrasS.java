@@ -4,11 +4,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class SopaLetrasS {
-    private String[] categ = {"Animales","Flores","Colores","Instrumentos musicales","Películas"};
+    private final String[] categ = {"Animales","Flores","Colores","Instrumentos musicales","Películas"};
+    private final String[] animales = {};
 
     public SopaLetrasS() {
         try {
-            ServerSocket s = new ServerSocket(3600);
+            ServerSocket s = new ServerSocket(3500);
             s.setReuseAddress(true);
             System.out.println("Servidor iniciado, esperando clientes...");
 
