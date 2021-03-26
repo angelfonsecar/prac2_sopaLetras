@@ -14,7 +14,7 @@ public class SopaLetrasC {
 	private JFrame frame;
 	private JPanel panelSopa, rightPanel;
 	JButton [][] botones;
-	private int rows=16;
+	private final int rows=16;
     private final int columns=16;
 
     private JTextField txt = new JTextField();
@@ -89,6 +89,8 @@ public class SopaLetrasC {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         System.out.println("Botón: "+botones[finalX][finalY].getName());
+                        //JButton first = (JButton) e.getSource();
+
                     }
                 });
 
