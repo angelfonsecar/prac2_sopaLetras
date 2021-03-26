@@ -25,6 +25,19 @@ public class SopaLetrasS {
                 while (true){
                     String elec = (String) ois.readObject();
                     System.out.println("elec = " + elec);
+
+                    //agarrar aleatoriamente unas 10 palabras de una lista total de 20
+
+                    //guardar en una lista las palabras elegidas
+                    //colocar las palabras en una matriz de 16*16
+                    //registrar por cada palabra, su coordenada de inicio, su coordenada de fin
+
+                    //rellenar aleatoriamente el resto de la matriz
+
+                    //enviar al cliente la lista de palabras
+                    //enviar al cliente las coordenadas de inicio y fin
+                    //enviar al cliente la matriz
+
                     if(elec.equals("salir")) break;
                 }
 

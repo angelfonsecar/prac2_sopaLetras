@@ -17,6 +17,9 @@ public class SopaLetrasC {
 	private final int rows=16;
     private final int columns=16;
 
+    private JButton tempButton = new JButton();
+
+
     private JTextField txt = new JTextField();
 
 	private ObjectOutputStream oos;
@@ -90,6 +93,7 @@ public class SopaLetrasC {
                     public void actionPerformed(ActionEvent e) {
                         System.out.println("Botón: "+botones[finalX][finalY].getName());
                         //JButton first = (JButton) e.getSource();
+                        verificaPalabra((JButton) e.getSource());
 
                     }
                 });
@@ -137,6 +141,20 @@ public class SopaLetrasC {
                 });*/
                 panelSopa.add(botones[x][y]);
             }
+        }
+    }
+
+    public void verificaPalabra(JButton presionado){
+	    String tempButtonName = tempButton.getName();
+	    if(tempButtonName==null){
+            System.out.println("El botón es el primero en ser presionado");
+            presionado.setEnabled(false);
+            tempButton = presionado;
+        }
+        else {
+            System.out.println("segundo en ser presionado\nEl primero fue "+tempButtonName);
+            tempButton.setEnabled(true);
+            tempButton = new JButton();
         }
     }
 
