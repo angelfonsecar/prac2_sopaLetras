@@ -4,7 +4,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class SopaLetrasS {
-    private final String[] categ = {"Animales","Flores","Colores","Instrumentos musicales","Películas"};
+    private final String[] categ = {"Flores","Colores","Instrumentos musicales","Películas"};
     private final String[] animales = {};
 
     public SopaLetrasS() {
