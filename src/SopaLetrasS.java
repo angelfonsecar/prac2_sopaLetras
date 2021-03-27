@@ -35,11 +35,12 @@ public class SopaLetrasS {
                     String elec = (String) ois.readObject();
                     System.out.println("elec = " + elec);
 
-                    String[] temp = escogeArreglo(elec);
+                    String[] palabrasElegidas = escogeArreglo(elec);
 
-                    //agarrar aleatoriamente unas 10 palabras de una lista total de 20
+                    for(int j=0; j<10;j++) {
+                        colocarPalabras(palabrasElegidas[j]);
+                    }
 
-                    //guardar en una lista las palabras elegidas
                     //colocar las palabras en una matriz de 16*16
                     //registrar por cada palabra, su coordenada de inicio, su coordenada de fin
 
@@ -85,6 +86,35 @@ public class SopaLetrasS {
         }
 
         return palabrasElegidas;
+    }
+
+    public void colocarPalabras(String palabra){
+        char[][] matrix = new char[16][16];
+        int modo = 3;
+
+        for(int i=0;i<16;i++)
+            for(int j=0;j<16;j++)
+                matrix[i][j]='0';
+
+        int xRand = (int) (Math.random()*16+1);
+        int yRand = (int) (Math.random()*16+1);
+
+        while(matrix[xRand][yRand]!='0'){   //obtener un origen vacío
+            xRand = (int) (Math.random()*16+1);
+            yRand = (int) (Math.random()*16+1);
+        }
+
+        for(int i=0;i<palabra.length();i++) {
+
+            if(matrix[xRand][yRand]=='0'){
+
+            }
+            else{
+
+            }
+        }
+
+
     }
 
     public static void main(String[] args) {
