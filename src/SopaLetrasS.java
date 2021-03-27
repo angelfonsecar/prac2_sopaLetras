@@ -2,6 +2,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class SopaLetrasS {
     private final String[] categ = {"animales","flores","colores","instrumentos musicales","películas"};
@@ -37,6 +39,7 @@ public class SopaLetrasS {
 
                     //agarrar aleatoriamente unas 10 palabras de una lista total de 20
 
+
                     //guardar en una lista las palabras elegidas
                     //colocar las palabras en una matriz de 16*16
                     //registrar por cada palabra, su coordenada de inicio, su coordenada de fin
@@ -57,6 +60,30 @@ public class SopaLetrasS {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public String[] escogeArreglo(String elec){
+        String[] categElegida = null;
+        String[] palabrasElegidas  = null;
+        if(elec.equals("animales"))
+            categElegida = animales;
+        if(elec.equals("flores"))
+            categElegida = flores;
+        if(elec.equals("peliculas"))
+            categElegida = peliculas;
+        if(elec.equals("instrumentos musicales"))
+            categElegida = instrumentos;
+        if(elec.equals("colores"))
+            categElegida = colores;
+
+        Collections.shuffle(Arrays.asList(categElegida));
+
+        for(int i=0; i<10; i++){
+            palabrasElegidas[i] = categElegida[i];
+            System.out.println("palabrasElegidas = " + palabrasElegidas);
+        }
+
+        return null;
     }
 
     public static void main(String[] args) {
