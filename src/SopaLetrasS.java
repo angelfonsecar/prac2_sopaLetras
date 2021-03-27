@@ -2,6 +2,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class SopaLetrasS {
     private final String[] categ = {"animales","flores","colores","instrumentos musicales","películas"};
