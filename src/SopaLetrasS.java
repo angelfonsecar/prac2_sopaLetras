@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class SopaLetrasS {
-    private final String[] categ = {"animales","flores","colores","instrumentos musicales","películas"};
+    private final String[] categ = {"animales","flores","colores","instrumentos musicales","peliculas"};
     private final String[] animales = {"PERRO","GATO","CABALLO","ZORRRO","DELFIN","SERPIENTE","ORNITORRINCO","IGUANA","JIRAFA","CAMELLO","OVEJA","TORO","RANA","ELEFANTE","HIPOPOTAMO","ZURICATA","OSO","NUTRIA","CABRA","COCHINILLA"};
     private final String[] colores = {"VERDE","ROJO","AZUL","MORADO","NARANJA","GUINDA","BLANCO","NEGRO","BEIGE","AMARILLO","MAGENTA","CARMESI","CORAL","GRIS","CAFE","AQUA","ROSA","VIOLETA","DURAZNO","TURQUESA"};
     private final String[] peliculas = {"LALALAND","CASABLANCA","AVATAR","MADMAX","INCEPTION","INTERESTELAR","DOGISLAND","ET","JUMANGI","BEETLEJUICE","VERTIGO","FRAGMENTADO","METROPOLIS","TIBURON","ALIEN","MATRIX","PARASITE","STARWARS","THEARRIVAL","MOTHER"};
@@ -61,19 +61,21 @@ public class SopaLetrasS {
         }
     }
 
-    public String[] escogeArreglo(String elec){
-        String[] categElegida = null;
-        String[] palabrasElegidas  = null;
-        if(elec.equals("animales"))
+    public String[] escogeArreglo(String elec) {
+        String[] categElegida = new String[20];
+        String[] palabrasElegidas = new String[10];
+        if (elec.equals("animales"))
             categElegida = animales;
-        if(elec.equals("flores"))
+        if (elec.equals("flores"))
             categElegida = flores;
-        if(elec.equals("peliculas"))
+        if (elec.equals("peliculas"))
             categElegida = peliculas;
-        if(elec.equals("instrumentos musicales"))
+        if (elec.equals("instrumentos musicales"))
             categElegida = instrumentos;
-        if(elec.equals("colores"))
+        if (elec.equals("colores"))
             categElegida = colores;
+        else
+            System.out.println("no hubo match");
 
         Collections.shuffle(Arrays.asList(categElegida));
 
