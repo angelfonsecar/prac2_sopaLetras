@@ -78,8 +78,8 @@ public class SopaLetrasC {
 	}
 
 	public void hazBotones(){
-        for(int x=0; x<rows; x++){
-            for (int y=0; y<columns; y++){
+        for(int y=0; y<rows; y++){
+            for (int x=0; x<columns; x++){
                 botones[x][y] = new JButton(x +","+ y);
                 botones[x][y].setMargin(new Insets(0,0,0,0));
                 //botones[x][y].setBackground(Color.WHITE);

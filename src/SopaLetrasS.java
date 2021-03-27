@@ -2,6 +2,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -12,6 +13,9 @@ public class SopaLetrasS {
     private final String[] peliculas = {"LALALAND","CASABLANCA","AVATAR","MADMAX","INCEPTION","INTERESTELAR","DOGISLAND","ET","JUMANGI","BEETLEJUICE","VERTIGO","FRAGMENTADO","METROPOLIS","TIBURON","ALIEN","MATRIX","PARASITE","STARWARS","THEARRIVAL","MOTHER"};
     private final String[] instrumentos = {"UKULELE","MARIMBA","KALIMBA","GUITARRA","BATERIA","TOLOLOCHE","BAJO","CONTRABAJO","VIOLIN","VIOLONCHELO","CHELO","ARPA","VIOLA","CLARINETE","FLAUTA","XILOFONO","PANDERO","BOMBO","PIANO","ACORDEON"};
     private final String[] flores = {"VIOLA","CRISANTEMO","ROSA","JAZMIN","GARDENIA","CAMELIA","BEGONIA","AZUCENA","TULIPAN","VIOLETA","ORQUIDEA","PETUNIA","NARCISO","MARGARITA","HORTENCIA","LIRIO","GIRASOL","TUBEROSA","DALIA","LAVANDA"};
+
+    private char[][] matrix = new char[16][16];
+    private ArrayList<DatosPalabra> palabrasArrayList = new ArrayList<>();
 
     private ObjectOutputStream oos;
     private ObjectInputStream ois;
@@ -35,15 +39,37 @@ public class SopaLetrasS {
                     String elec = (String) ois.readObject();
                     System.out.println("elec = " + elec);
 
-                    String[] temp = escogeArreglo(elec);
+                    for(int i=0;i<16;i++)
+                        for(int j=0;j<16;j++)
+                            matrix[i][j]='-';
 
-                    //agarrar aleatoriamente unas 10 palabras de una lista total de 20
+                    String[] palabrasElegidas = escogeArreglo(elec);    //se seleccionan 10 palabras al azar
 
-                    //guardar en una lista las palabras elegidas
-                    //colocar las palabras en una matriz de 16*16
-                    //registrar por cada palabra, su coordenada de inicio, su coordenada de fin
+                    palabrasArrayList.clear();
 
-                    //rellenar aleatoriamente el resto de la matriz
+                    for(int j=0; j<10; j++) {
+                        colocarPalabra(palabrasElegidas[j]);
+                    }
+
+                    for (int x=0; x < matrix.length; x++) {
+                        for (int y=0; y < matrix[x].length; y++) {
+                            System.out.print(" | ");System.out.print (matrix[x][y]); System.out.print(" | ");
+                        }
+                        System.out.println();
+                    }
+                    completaMatrix();
+                    for (int x=0; x < matrix.length; x++) {
+                        for (int y=0; y < matrix[x].length; y++) {
+                            System.out.print(" | ");System.out.print (matrix[x][y]); System.out.print(" | ");
+                        }
+                        System.out.println();
+                    }
+
+                    /*for (DatosPalabra datoPalabra: palabrasArrayList) {
+                        System.out.println("\nPalabra: "+datoPalabra.getPalabra()+
+                                "\nCoord inicio:"+datoPalabra.getxInicio()+","+datoPalabra.getyInicio()+
+                                "\nCoord fin:"+datoPalabra.getxFin()+","+datoPalabra.getyFin());
+                    }*/
 
                     //enviar al cliente la lista de palabras
                     //enviar al cliente las coordenadas de inicio y fin
@@ -79,12 +105,120 @@ public class SopaLetrasS {
 
         Collections.shuffle(Arrays.asList(categElegida));
 
-        for(int i=0; i<10; i++){
+        for (int i = 0; i < 10; i++) {
             palabrasElegidas[i] = categElegida[i];
-            System.out.println("palabrasElegidas = " + palabrasElegidas);
+            System.out.println("palabraElegidas = " + palabrasElegidas[i]+" tam: "+palabrasElegidas[i].length());
         }
 
-        return null;
+        return palabrasElegidas;
+    }
+
+    public void colocarPalabra(String palabra){
+        int xRand;
+        int yRand;
+
+        do{   //obtener un origen vacío
+            xRand = (int) (Math.random()*15);
+            yRand = (int) (Math.random()*15);
+        }
+        while(matrix[xRand][yRand]!='-');
+
+        int modo;
+        boolean correctOrient = false;
+        for(modo=0; modo<8; modo++){
+
+            switch (modo) {
+                case 0 -> correctOrient = encuentraOrient(palabra, xRand, yRand, 1, 0);// las 3
+                case 1 -> correctOrient = encuentraOrient(palabra, xRand, yRand, 1, 1);// las 4 y media
+                case 2 -> correctOrient = encuentraOrient(palabra, xRand, yRand, 0, 1);// las 6
+                case 3 -> correctOrient = encuentraOrient(palabra, xRand, yRand, -1, 1);// las 7 y media
+                case 4 -> correctOrient = encuentraOrient(palabra, xRand, yRand, -1, 0);// las 9
+                case 5 -> correctOrient = encuentraOrient(palabra, xRand, yRand, 1, -1);// las 10 y media
+                case 6 -> correctOrient = encuentraOrient(palabra, xRand, yRand, 0, -1);// las 12
+                case 7 -> correctOrient = encuentraOrient(palabra, xRand, yRand, -1, -1);//la 1 y media
+            }
+
+            if(correctOrient) {
+                registraCoordenadas(palabra,xRand,yRand,modo);
+                break;
+            }
+        }
+        if(!correctOrient)
+            colocarPalabra(palabra);
+    }
+
+    boolean encuentraOrient(String palabra, int x, int y, int difX, int difY){
+
+        boolean cabePalabra = false;
+
+        if((x+palabra.length()*difX)>15 || (y+palabra.length()*difY)>15 || (x+palabra.length()*difX)<0 || (y+palabra.length()*difY)<0)
+            return false;
+
+        int i;
+        for(i=0; i<palabra.length(); i++){
+            if(matrix[ x + i*difX ][ y + i*difY ]=='-'){
+                cabePalabra = true;
+            }else{
+                cabePalabra = false;
+                break;
+            }
+        }
+
+        if(cabePalabra){
+            for(int j=0; j<palabra.length(); j++)
+                matrix[ x + j*difX ][ y + j*difY ] = palabra.charAt(j);
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public void registraCoordenadas(String palabra, int filaInicio, int columnaInicio, int modo){
+        //System.out.println("ejecutando registraCoord palabra: "+palabra+" caso: "+modo);
+        int filaFin=0,columnaFin=0;
+        switch(modo){
+            case 0 ->{
+                filaFin= filaInicio+palabra.length()-1;
+                columnaFin= columnaInicio;
+            }
+            case 1 ->{
+                filaFin= filaInicio+palabra.length()-1;
+                columnaFin= columnaInicio+palabra.length()-1;
+            }
+            case 2 ->{
+                filaFin= filaInicio;
+                columnaFin= columnaInicio+palabra.length()-1;
+            }
+            case 3 ->{
+                filaFin= filaInicio-palabra.length()+1;
+                columnaFin= columnaInicio+palabra.length()-1;
+            }
+            case 4 ->{
+                filaFin= filaInicio-palabra.length()+1;
+                columnaFin= columnaInicio;
+            }
+            case 5 -> {
+                filaFin = filaInicio - palabra.length() + 1;
+                columnaFin = columnaInicio - palabra.length() + 1;
+            }
+            case 6 ->{
+                filaFin= filaInicio;
+                columnaFin= columnaInicio-palabra.length()+1;
+            }
+            case 7 ->{
+                filaFin= filaInicio+palabra.length()-1;
+                columnaFin= columnaInicio-palabra.length()+1;
+            }
+        }
+        DatosPalabra datosPalabra = new DatosPalabra(columnaInicio,filaInicio,columnaFin,filaFin,palabra);
+        palabrasArrayList.add(datosPalabra);
+    }
+
+    public void completaMatrix(){
+        for(int i=0;i<16;i++)
+            for(int j=0;j<16;j++)
+                if(matrix[i][j]=='-')
+                    matrix[i][j] = (char) (Math.random()*(90-65+1)+65);
     }
 
     public static void main(String[] args) {
