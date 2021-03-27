@@ -84,7 +84,7 @@ public class SopaLetrasS {
             System.out.println("palabrasElegidas = " + palabrasElegidas);
         }
 
-        return null;
+        return palabrasElegidas;
     }
 
     public static void main(String[] args) {
