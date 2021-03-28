@@ -1,15 +1,16 @@
 public class DatosPalabra {
-    private String palabra;
     private int xInicio;
     private int yInicio;
     private int xFin;
     private int yFin;
+    private String palabra;
 
     public DatosPalabra(int xInicio, int yInicio, int xFin, int yFin, String palabra) {
         this.xInicio = xInicio;
         this.yInicio = yInicio;
         this.xFin = xFin;
         this.yFin = yFin;
+        this.palabra = palabra;
     }
 
     public String getPalabra() {

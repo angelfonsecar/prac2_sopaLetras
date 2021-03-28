@@ -71,8 +71,7 @@ public class SopaLetrasS {
                                 "\nCoord fin:"+datoPalabra.getxFin()+","+datoPalabra.getyFin());
                     }*/
 
-                    //enviar al cliente la lista de palabras
-                    //enviar al cliente las coordenadas de inicio y fin
+                    //enviar al cliente el array con: la lista de palabras, las coordenadas de inicio y fin.
                     //enviar al cliente la matriz
 
                     if(elec.equals("salir")) break;
@@ -163,6 +162,15 @@ public class SopaLetrasS {
                 break;
             }
         }
+
+        if(cabePalabra){
+            for(int j=0; j<palabra.length(); j++)
+                matrix[ x + j*difX ][ y + j*difY ] = palabra.charAt(j);
+            return true;
+        }
+        else
+            return false;
+    }
 
         if(cabePalabra){
             for(int j=0; j<palabra.length(); j++)
