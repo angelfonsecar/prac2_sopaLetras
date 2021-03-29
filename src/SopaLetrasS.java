@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class SopaLetrasS {
-    private final String[] animales = {"PERRO","GATO","CABALLO","ZORRRO","DELFIN","SERPIENTE","ORNITORRINCO","IGUANA","JIRAFA","CAMELLO","OVEJA","TORO","RANA","ELEFANTE","HIPOPOTAMO","ZURICATA","OSO","NUTRIA","CABRA","COCHINILLA"};
+    private final String[] animales = {"PERRO","GATO","CABALLO","ZORRO","DELFIN","SERPIENTE","ORNITORRINCO","IGUANA","JIRAFA","CAMELLO","OVEJA","TORO","RANA","ELEFANTE","HIPOPOTAMO","ZURICATA","OSO","NUTRIA","CABRA","COCHINILLA"};
     private final String[] colores = {"VERDE","ROJO","AZUL","MORADO","NARANJA","GUINDA","BLANCO","NEGRO","BEIGE","AMARILLO","MAGENTA","CARMESI","CORAL","GRIS","CAFE","AQUA","ROSA","VIOLETA","DURAZNO","TURQUESA"};
     private final String[] peliculas = {"LALALAND","CASABLANCA","AVATAR","MADMAX","INCEPTION","INTERESTELAR","DOGISLAND","ET","JUMANGI","BEETLEJUICE","VERTIGO","FRAGMENTADO","METROPOLIS","TIBURON","ALIEN","MATRIX","PARASITE","STARWARS","THEARRIVAL","MOTHER"};
     private final String[] instrumentos = {"UKULELE","MARIMBA","KALIMBA","GUITARRA","BATERIA","TOLOLOCHE","BAJO","CONTRABAJO","VIOLIN","VIOLONCHELO","CHELO","ARPA","VIOLA","CLARINETE","FLAUTA","XILOFONO","PANDERO","BOMBO","PIANO","ACORDEON"};
@@ -57,14 +57,6 @@ public class SopaLetrasS {
                         System.out.println();
                     }
                     completaMatrix();
-                    for (char[] chars : matrix) {
-                        for (char aChar : chars) {
-                            System.out.print(" | ");
-                            System.out.print(aChar);
-                            System.out.print(" | ");
-                        }
-                        System.out.println();
-                    }
 
                     for (DatosPalabra datoPalabra: palabrasArrayList) { //imiprime la lista de palabras con sus propiedades
                         System.out.println("\nPalabra: "+datoPalabra.getPalabra()+
@@ -82,9 +74,6 @@ public class SopaLetrasS {
 
                     oos.writeObject(palabrasArrayList.clone());
                     oos.flush();
-
-                    //enviar al cliente el array con: la lista de palabras, las coordenadas de inicio y fin.
-                    //enviar al cliente la matriz
 
                     if(elec.equals("salir")) break;
                 }
@@ -116,10 +105,7 @@ public class SopaLetrasS {
 
         Collections.shuffle(Arrays.asList(categElegida));
 
-        for (int i = 0; i < 10; i++) {
-            palabrasElegidas[i] = categElegida[i];
-            System.out.println("palabraElegidas = " + palabrasElegidas[i]+" tam: "+palabrasElegidas[i].length());
-        }
+        System.arraycopy(categElegida, 0, palabrasElegidas, 0, 10);
 
         return palabrasElegidas;
     }

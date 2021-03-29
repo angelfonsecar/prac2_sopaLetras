@@ -1,8 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -17,6 +15,8 @@ public class SopaLetrasC {
     private ArrayList<DatosPalabra> palabrasArrayList = new ArrayList<>();
 
     int palabrasFaltantes;
+    long fInicio;
+    boolean terminar = false;
 
     private JButton tempButton = new JButton();
 
@@ -52,9 +52,19 @@ public class SopaLetrasC {
                 combo.addItem(category);
             inicLabels();
 
+
             // Accion a realizar cuando el usuario cambia de categoría seleccionado.
             combo.addActionListener(e -> {
+                //iniciar el cronometro
+                fInicio = System.currentTimeMillis();
+
                 palabrasFaltantes = 10;
+                for(int i=0; i<16; i++){        //leemos la matriz de letras
+                    for (int j=0; j<16; j++){
+                        botones[i][j].setEnabled(true);
+                        botones[i][j].setBackground(null);
+                    }
+                }
                 String elec = combo.getSelectedItem().toString();
                 try {
                     oos.writeObject(elec);
@@ -89,6 +99,8 @@ public class SopaLetrasC {
                     ioException.printStackTrace();
                 }
             });
+
+
             hazBotones();
             for(int i=0; i<10; i++){
                 labelPanel.add(palabrasPorEncontrar[i]);
@@ -102,9 +114,13 @@ public class SopaLetrasC {
 
             if(!frame.isActive())
                 System.out.println("Marco no activo");
-            //oos.close();
-            //ois.close();
-            //cl.close();
+
+            while(!terminar){
+                Thread.sleep(10);
+            }
+            oos.close();
+            ois.close();
+            cl.close();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -124,12 +140,7 @@ public class SopaLetrasC {
                 botones[x][y].setPreferredSize(new Dimension(30, 30));
                 botones[x][y].setName(x+","+y);
 
-                botones[x][y].addActionListener(e -> {
-                    //System.out.println("Botón: "+botones[finalX][finalY].getName());
-                    //JButton first = (JButton) e.getSource();
-                    verificaPalabra((JButton) e.getSource());
-
-                });
+                botones[x][y].addActionListener(e -> verificaPalabra((JButton) e.getSource()));
 
                 panelSopa.add(botones[x][y]);
             }
@@ -159,7 +170,6 @@ public class SopaLetrasC {
                 index++;
                 if (tempButtonName.equals(datoPalabra.getxInicio() + "," + datoPalabra.getyInicio())) {
                     isInCoordInicio = true;
-                    System.out.println("La coord inicio es correcta con el indice: " + index);
                     break;
                 }
             }
@@ -175,8 +185,15 @@ public class SopaLetrasC {
                     if(palabrasPorEncontrar[i].getText().equals(posibleCoincidencia.getPalabra()))
                         palabrasPorEncontrar[i].setText("-----");
                 }
-                if(palabrasFaltantes<=0){
+                if(palabrasFaltantes<1){
+                    System.out.println("Tiempo: " + ((System.currentTimeMillis()-fInicio)/1000) );
+                    System.out.println("Felicidades!!!\nHaz Ganado, ingresa tu nombre:");
+                    Scanner reader = new Scanner(System.in);
+                    String nickname = reader.nextLine();
 
+                    registro(nickname, String.valueOf(((System.currentTimeMillis()-fInicio)/1000)));
+                    System.out.println("Saliendo...");
+                    terminar = true;
                 }
 
             } else {
@@ -184,8 +201,6 @@ public class SopaLetrasC {
                 tempButton.setBackground(null);
                 System.out.println("\nIntenta de nuevo");
             }
-
-            tempButton.setEnabled(true);
             tempButton = new JButton();
         }
     }
@@ -196,37 +211,45 @@ public class SopaLetrasC {
         int difY= acierto.getyFin()- acierto.getyInicio();
 
         if(difX>0 && difY==0)  //modo 0
-            for(int i=0;i<auxP;i++)
-                botones[acierto.getxInicio()+i][acierto.getyInicio()].setBackground(Color.pink);
-
+            for(int i=0;i<auxP;i++) {
+                botones[acierto.getxInicio() + i][acierto.getyInicio()].setBackground(Color.pink);
+                botones[acierto.getxInicio()+i][acierto.getyInicio()].setEnabled(false);
+            }
         if(difX>0 && difY>0)  //modo 1
-            for(int i=0;i<auxP;i++)
-                botones[acierto.getxInicio()+i][acierto.getyInicio()+i].setBackground(Color.pink);
-
+            for(int i=0;i<auxP;i++) {
+                botones[acierto.getxInicio() + i][acierto.getyInicio() + i].setBackground(Color.pink);
+                botones[acierto.getxInicio() + i][acierto.getyInicio() + i].setEnabled(false);
+            }
         if(difX==0 && difY>0) //modo 2
-            for(int i=0;i<auxP;i++)
-                botones[acierto.getxInicio()][acierto.getyInicio()+i].setBackground(Color.pink);
-
+            for(int i=0;i<auxP;i++) {
+                botones[acierto.getxInicio()][acierto.getyInicio() + i].setBackground(Color.pink);
+                botones[acierto.getxInicio()][acierto.getyInicio() + i].setEnabled(false);
+            }
         if(difX<0 && difY>0)  //modo 3
-            for(int i=0;i<auxP;i++)
-                botones[acierto.getxInicio()-i][acierto.getyInicio()+i].setBackground(Color.pink);
-
+            for(int i=0;i<auxP;i++) {
+                botones[acierto.getxInicio() - i][acierto.getyInicio() + i].setBackground(Color.pink);
+                botones[acierto.getxInicio() - i][acierto.getyInicio() + i].setEnabled(false);
+            }
         if(difX<0 && difY==0) //modo 4
-            for(int i=0;i<auxP;i++)
-                botones[acierto.getxInicio()-i][acierto.getyInicio()].setBackground(Color.pink);
-
+            for(int i=0;i<auxP;i++) {
+                botones[acierto.getxInicio() - i][acierto.getyInicio()].setBackground(Color.pink);
+                botones[acierto.getxInicio() - i][acierto.getyInicio()].setEnabled(false);
+            }
         if(difX<0 && difY<0)  //modo 5
-            for(int i=0;i<auxP;i++)
-                botones[acierto.getxInicio()-i][acierto.getyInicio()-i].setBackground(Color.pink);
-
+            for(int i=0;i<auxP;i++) {
+                botones[acierto.getxInicio() - i][acierto.getyInicio() - i].setBackground(Color.pink);
+                botones[acierto.getxInicio() - i][acierto.getyInicio() - i].setEnabled(false);
+            }
         if(difX==0 && difY<0)  //modo 6
-            for(int i=0;i<auxP;i++)
-                botones[acierto.getxInicio()][acierto.getyInicio()-i].setBackground(Color.pink);
-
+            for(int i=0;i<auxP;i++) {
+                botones[acierto.getxInicio()][acierto.getyInicio() - i].setBackground(Color.pink);
+                botones[acierto.getxInicio()][acierto.getyInicio() - i].setEnabled(false);
+            }
         if(difX>0 && difY<0)  //modo 7
-            for(int i=0;i<auxP;i++)
-                botones[acierto.getxInicio()+i][acierto.getyInicio()-i].setBackground(Color.pink);
-
+            for(int i=0;i<auxP;i++) {
+                botones[acierto.getxInicio() + i][acierto.getyInicio() - i].setBackground(Color.pink);
+                botones[acierto.getxInicio() + i][acierto.getyInicio() - i].setEnabled(false);
+            }
     }
 
 
