@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -9,15 +7,16 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class SopaLetrasC {
-    private JComboBox<String> combo = new JComboBox<>();;
-    private JFrame frame;
+    private final JComboBox<String> combo = new JComboBox<>();
     private JPanel panelSopa, rightPanel, labelPanel;
     private JLabel [] palabrasPorEncontrar;
     JButton [][] botones;
     private final int rows=16;
     private final int columns=16;
-    private char[][] matrix = new char[16][16];
+    private final char[][] matrix = new char[16][16];
     private ArrayList<DatosPalabra> palabrasArrayList = new ArrayList<>();
+
+    int palabrasFaltantes;
 
     private JButton tempButton = new JButton();
 
@@ -35,7 +34,7 @@ public class SopaLetrasC {
         labelPanel.setLayout(new BoxLayout(labelPanel,BoxLayout.Y_AXIS));
 
 
-        frame = new JFrame();
+        JFrame frame = new JFrame();
         frame.setLayout(new BorderLayout());
 
         try{
@@ -55,6 +54,7 @@ public class SopaLetrasC {
 
             // Accion a realizar cuando el usuario cambia de categoría seleccionado.
             combo.addActionListener(e -> {
+                palabrasFaltantes = 10;
                 String elec = combo.getSelectedItem().toString();
                 try {
                     oos.writeObject(elec);
@@ -121,63 +121,16 @@ public class SopaLetrasC {
             for (int x=0; x<columns; x++){
                 botones[x][y] = new JButton(x+","+y);
                 botones[x][y].setMargin(new Insets(0,0,0,0));
-                //botones[x][y].setBackground(Color.WHITE);
                 botones[x][y].setPreferredSize(new Dimension(30, 30));
                 botones[x][y].setName(x+","+y);
 
-                int finalX = x;
-                int finalY = y;
-                botones[x][y].addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        System.out.println("Botón: "+botones[finalX][finalY].getName());
-                        //JButton first = (JButton) e.getSource();
-                        verificaPalabra((JButton) e.getSource());
+                botones[x][y].addActionListener(e -> {
+                    //System.out.println("Botón: "+botones[finalX][finalY].getName());
+                    //JButton first = (JButton) e.getSource();
+                    verificaPalabra((JButton) e.getSource());
 
-                    }
                 });
 
-//                botones[x][y].putClientProperty("xpos", y);
-//                botones[x][y].putClientProperty("ypos", x);
-//                botones[x][y].putClientProperty("result", false);
-                /*botones[x][y].addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent actionEvent) {
-                        System.out.println(actionEvent.getActionCommand());
-                        if(!gamestatus) return;
-                        JButton actioner = (JButton) actionEvent.getSource();
-                        if(!selectedButtons.contains(actioner)){
-                            selectedButtons.add(actioner);
-                            actioner.setBackground(Color.YELLOW);
-                            System.out.println(actioner.getClientProperty("xpos") + " . " + actioner.getClientProperty("ypos"));
-                        }else{
-                            selectedButtons.remove(actioner);
-                            actioner.setBackground(Color.WHITE);
-                            if((boolean) actioner.getClientProperty("result")){
-                                actioner.setBackground(Color.GREEN);
-                            }
-                        }
-                        if (checkIfOk()){
-                            System.out.println("Checar si es alguna palabra");
-                            String word = getWordInOrder();
-                            if(actualWords.contains(word.toLowerCase(Locale.ROOT)) || actualWords.contains(StringUtils.reverse(word.toLowerCase(Locale.ROOT)))){
-                                System.out.println("Encontraste la palabra :  " + word);
-                                disableButtons();
-                                markInPanel(word);
-                                //actualWords.get();
-                                int posInOrder = actualWords.indexOf(word.toLowerCase(Locale.ROOT));
-                                int posInDisorder = actualWords.indexOf(StringUtils.reverse(word.toLowerCase(Locale.ROOT)));
-                                if(posInOrder>=0) actualWords.remove(posInOrder);
-                                else{
-                                    actualWords.remove(posInDisorder);
-                                }
-                                if(actualWords.size()==0){
-                                    endGame();
-                                }
-                            }
-                        }
-                    }
-                });*/
                 panelSopa.add(botones[x][y]);
             }
         }
@@ -216,9 +169,20 @@ public class SopaLetrasC {
             if (isInCoordInicio && presionado.getName().equals(posibleCoincidencia.getxFin() + "," + posibleCoincidencia.getyFin())) {
                 System.out.println("Felicidades, palabra encontrada: " + posibleCoincidencia.getPalabra());
                 colorearCeldas(posibleCoincidencia);
+                palabrasFaltantes--;
+                System.out.println("Faltan "+palabrasFaltantes+" palabras");
+                for(int i=0; i<10; i++){
+                    if(palabrasPorEncontrar[i].getText().equals(posibleCoincidencia.getPalabra()))
+                        palabrasPorEncontrar[i].setText("-----");
+                }
+                if(palabrasFaltantes<=0){
+
+                }
 
             } else {
-                System.out.println("Intenta de nuevo");
+                tempButton.setEnabled(true);
+                tempButton.setBackground(null);
+                System.out.println("\nIntenta de nuevo");
             }
 
             tempButton.setEnabled(true);
@@ -231,36 +195,38 @@ public class SopaLetrasC {
         int difX=acierto.getxFin()- acierto.getxInicio();
         int difY= acierto.getyFin()- acierto.getyInicio();
 
-        if(difX>0 && difY==0) { //modo 0
+        if(difX>0 && difY==0)  //modo 0
             for(int i=0;i<auxP;i++)
-                botones[acierto.getxInicio()+i][acierto.getyInicio()].setBackground(Color.BLUE);
-        }
-        if(difX>0 && difY>0) { //modo 1
-            for(int i=0;i<auxP;i++)
-                botones[acierto.getxInicio()+i][acierto.getyInicio()+i].setBackground(Color.BLUE);
-        }
-        if(difX==0 && difY>0) { //modo 2
-            for(int i=0;i<auxP;i++)
-                botones[acierto.getxInicio()][acierto.getyInicio()+i].setBackground(Color.BLUE);
-        }
-        if(difX<0 && difY>0) { //modo 3
+                botones[acierto.getxInicio()+i][acierto.getyInicio()].setBackground(Color.pink);
 
-        }
-        if(difX<0 && difY==0) { //modo 4
+        if(difX>0 && difY>0)  //modo 1
             for(int i=0;i<auxP;i++)
-                botones[acierto.getxInicio()-i][acierto.getyInicio()].setBackground(Color.BLUE);
-        }
-        if(difX<0 && difY<0) { //modo 5
+                botones[acierto.getxInicio()+i][acierto.getyInicio()+i].setBackground(Color.pink);
 
-        }
-        if(difX==0 && difY<0) { //modo 6
+        if(difX==0 && difY>0) //modo 2
             for(int i=0;i<auxP;i++)
-                botones[acierto.getxInicio()][acierto.getyInicio()-i].setBackground(Color.BLUE);
-        }
-        if(difX>0 && difY<0) { //modo 7
+                botones[acierto.getxInicio()][acierto.getyInicio()+i].setBackground(Color.pink);
 
-        }
-        //Stella pega tu chingada funcion aqui
+        if(difX<0 && difY>0)  //modo 3
+            for(int i=0;i<auxP;i++)
+                botones[acierto.getxInicio()-i][acierto.getyInicio()+i].setBackground(Color.pink);
+
+        if(difX<0 && difY==0) //modo 4
+            for(int i=0;i<auxP;i++)
+                botones[acierto.getxInicio()-i][acierto.getyInicio()].setBackground(Color.pink);
+
+        if(difX<0 && difY<0)  //modo 5
+            for(int i=0;i<auxP;i++)
+                botones[acierto.getxInicio()-i][acierto.getyInicio()-i].setBackground(Color.pink);
+
+        if(difX==0 && difY<0)  //modo 6
+            for(int i=0;i<auxP;i++)
+                botones[acierto.getxInicio()][acierto.getyInicio()-i].setBackground(Color.pink);
+
+        if(difX>0 && difY<0)  //modo 7
+            for(int i=0;i<auxP;i++)
+                botones[acierto.getxInicio()+i][acierto.getyInicio()-i].setBackground(Color.pink);
+
     }
 
 

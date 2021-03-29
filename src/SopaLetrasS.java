@@ -7,18 +7,14 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class SopaLetrasS {
-    private final String[] categ = {"animales","flores","colores","instrumentos musicales","peliculas"};
     private final String[] animales = {"PERRO","GATO","CABALLO","ZORRRO","DELFIN","SERPIENTE","ORNITORRINCO","IGUANA","JIRAFA","CAMELLO","OVEJA","TORO","RANA","ELEFANTE","HIPOPOTAMO","ZURICATA","OSO","NUTRIA","CABRA","COCHINILLA"};
     private final String[] colores = {"VERDE","ROJO","AZUL","MORADO","NARANJA","GUINDA","BLANCO","NEGRO","BEIGE","AMARILLO","MAGENTA","CARMESI","CORAL","GRIS","CAFE","AQUA","ROSA","VIOLETA","DURAZNO","TURQUESA"};
     private final String[] peliculas = {"LALALAND","CASABLANCA","AVATAR","MADMAX","INCEPTION","INTERESTELAR","DOGISLAND","ET","JUMANGI","BEETLEJUICE","VERTIGO","FRAGMENTADO","METROPOLIS","TIBURON","ALIEN","MATRIX","PARASITE","STARWARS","THEARRIVAL","MOTHER"};
     private final String[] instrumentos = {"UKULELE","MARIMBA","KALIMBA","GUITARRA","BATERIA","TOLOLOCHE","BAJO","CONTRABAJO","VIOLIN","VIOLONCHELO","CHELO","ARPA","VIOLA","CLARINETE","FLAUTA","XILOFONO","PANDERO","BOMBO","PIANO","ACORDEON"};
     private final String[] flores = {"VIOLA","CRISANTEMO","ROSA","JAZMIN","GARDENIA","CAMELIA","BEGONIA","AZUCENA","TULIPAN","VIOLETA","ORQUIDEA","PETUNIA","NARCISO","MARGARITA","HORTENCIA","LIRIO","GIRASOL","TUBEROSA","DALIA","LAVANDA"};
 
-    private char[][] matrix = new char[16][16];
-    private ArrayList<DatosPalabra> palabrasArrayList = new ArrayList<>();
-
-    private ObjectOutputStream oos;
-    private ObjectInputStream ois;
+    private final char[][] matrix = new char[16][16];
+    private final ArrayList<DatosPalabra> palabrasArrayList = new ArrayList<>();
 
     public SopaLetrasS() {
         try {
@@ -30,8 +26,9 @@ public class SopaLetrasS {
                 Socket cl = s.accept();
                 System.out.println("Cliente conectado desde  "+cl.getInetAddress()+" : "+cl.getPort());
 
-                oos = new ObjectOutputStream(cl.getOutputStream());
-                ois = new ObjectInputStream(cl.getInputStream());
+                ObjectOutputStream oos = new ObjectOutputStream(cl.getOutputStream());
+                ObjectInputStream ois = new ObjectInputStream(cl.getInputStream());
+                String[] categ = {"animales", "flores", "colores", "instrumentos musicales", "peliculas"};
                 oos.writeObject(categ);
                 oos.flush();
 
@@ -51,16 +48,20 @@ public class SopaLetrasS {
                         colocarPalabra(palabrasElegidas[j]);
                     }
 
-                    for (int x=0; x < matrix.length; x++) {
-                        for (int y=0; y < matrix[x].length; y++) {
-                            System.out.print(" | ");System.out.print (matrix[x][y]); System.out.print(" | ");
+                    for (char[] chars : matrix) {
+                        for (char aChar : chars) {
+                            System.out.print(" | ");
+                            System.out.print(aChar);
+                            System.out.print(" | ");
                         }
                         System.out.println();
                     }
                     completaMatrix();
-                    for (int x=0; x < matrix.length; x++) {
-                        for (int y=0; y < matrix[x].length; y++) {
-                            System.out.print(" | ");System.out.print (matrix[x][y]); System.out.print(" | ");
+                    for (char[] chars : matrix) {
+                        for (char aChar : chars) {
+                            System.out.print(" | ");
+                            System.out.print(aChar);
+                            System.out.print(" | ");
                         }
                         System.out.println();
                     }
