@@ -65,11 +65,22 @@ public class SopaLetrasS {
                         System.out.println();
                     }
 
-                    /*for (DatosPalabra datoPalabra: palabrasArrayList) {
+                    for (DatosPalabra datoPalabra: palabrasArrayList) { //imiprime la lista de palabras con sus propiedades
                         System.out.println("\nPalabra: "+datoPalabra.getPalabra()+
                                 "\nCoord inicio:"+datoPalabra.getxInicio()+","+datoPalabra.getyInicio()+
                                 "\nCoord fin:"+datoPalabra.getxFin()+","+datoPalabra.getyFin());
-                    }*/
+                    }
+
+                    for(int i=0; i<16; i++){    //envia la matriz
+                        for (int j=0; j<16; j++){
+                            char charTemp = matrix[i][j];
+                            oos.writeObject(charTemp);
+                            oos.flush();
+                        }
+                    }
+
+                    oos.writeObject(palabrasArrayList.clone());
+                    oos.flush();
 
                     //enviar al cliente el array con: la lista de palabras, las coordenadas de inicio y fin.
                     //enviar al cliente la matriz
@@ -146,16 +157,16 @@ public class SopaLetrasS {
             colocarPalabra(palabra);
     }
 
-    boolean encuentraOrient(String palabra, int x, int y, int difX, int difY){
+    boolean encuentraOrient(String palabra, int x, int y, int difFila, int difCol){
 
         boolean cabePalabra = false;
 
-        if((x+palabra.length()*difX)>15 || (y+palabra.length()*difY)>15 || (x+palabra.length()*difX)<0 || (y+palabra.length()*difY)<0)
+        if((x+palabra.length()*difFila)>15 || (y+palabra.length()*difCol)>15 || (x+palabra.length()*difFila)<0 || (y+palabra.length()*difCol)<0)
             return false;
 
         int i;
         for(i=0; i<palabra.length(); i++){
-            if(matrix[ x + i*difX ][ y + i*difY ]=='-'){
+            if(matrix[ x + i*difFila ][ y + i*difCol ]=='-'){
                 cabePalabra = true;
             }else{
                 cabePalabra = false;
@@ -165,7 +176,7 @@ public class SopaLetrasS {
 
         if(cabePalabra){
             for(int j=0; j<palabra.length(); j++)
-                matrix[ x + j*difX ][ y + j*difY ] = palabra.charAt(j);
+                matrix[ x + j*difFila ][ y + j*difCol ] = palabra.charAt(j);
             return true;
         }
         else
